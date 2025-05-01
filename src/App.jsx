@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 function App() {
     const [videoDevices, setVideoDevices] = useState([]);
     const [selectedDeviceId, setSelectedDeviceId] = useState('');
+    const [fileName, setFileName] = useState('combined_slices');
     const [slices, setSlices] = useState([null, null, null, null]);
     const [photo] = useState(null);
     const videoRef = useRef(null);
@@ -130,7 +131,7 @@ function App() {
 
         const link = document.createElement('a');
         link.href = finalImage;
-        link.download = 'combined_slices.png';
+        link.download = `${fileName || 'combined_slices'}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -138,11 +139,12 @@ function App() {
 
     const clearSlices = () => {
         setSlices([null, null, null, null]);
+        setFileName('');
     };
 
     return (
         <div style={{padding: '1em', fontFamily: 'sans-serif'}}>
-            <h1>Minifigure photo generator</h1>
+            <h1>Minifigure Photo Studio</h1>
 
             <label>Select Camera:</label>
             <select
@@ -224,6 +226,20 @@ function App() {
                         </div>
                     )
                 )}
+            </div>
+
+            <div style={{margin: '1em 0'}}>
+                <label>
+                    File name:&nbsp;
+                    <input
+                        type="text"
+                        value={fileName}
+                        onChange={(e) => setFileName(e.target.value)}
+                        placeholder="combined_slices"
+                        style={{padding: '4px', width: '200px'}}
+                    />
+                    <span>.png</span>
+                </label>
             </div>
 
             <button onClick={downloadCombinedImage} disabled={slices.some((s) => !s)}>
